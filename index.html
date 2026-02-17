@@ -31,7 +31,7 @@
 
     /* ── HERO ── */
     .hero { background:linear-gradient(160deg,var(--g1) 0%,#145a22 45%,var(--b2) 100%); color:white; text-align:center; padding:5.5rem 1.5rem 4.5rem; position:relative; overflow:hidden; }
-    .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 80% 20%,rgba(91,184,232,.22) 0%,transparent 55%),radial-gradient(ellipse at 10% 80%,rgba(76,187,58,.18) 0%,transparent 50%); }
+    .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 80% 20%,rgba(91,184,232,.22) 0%,transparent 55%),radial-gradient(ellipse at 10% 80%,rgba(76,187,58,.18) 0%,transparent 50%); pointer-events:none; }
     .hero-tag { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3); color:rgba(255,255,255,.95); font-size:.8rem; font-weight:700; padding:.4rem 1.1rem; border-radius:999px; margin-bottom:1.6rem; letter-spacing:.06em; text-transform:uppercase; backdrop-filter:blur(8px); }
     .hero h1 { font-family:'Nunito',sans-serif; font-size:clamp(2.2rem,5.5vw,3.8rem); font-weight:900; line-height:1.1; margin-bottom:1.2rem; font-style:italic; }
     .hero h1 .ac1{color:var(--b1);} .hero h1 .ac2{color:var(--g2);}
@@ -286,12 +286,12 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-tag">🌱 Economía circular en tu puerta</div>
+  <div class="hero-tag">📍 Solo Vitacura · Rutas Martes y Viernes</div>
   <h1>Tus botellas vuelven<br>convertidas en <span class="ac1">bebidas</span> <span class="ac2">frescas</span></h1>
   <div class="slogan-hero">
     <div class="slogan-part">Recoge</div><div class="slogan-part">Retorna</div><div class="slogan-part">Reparte</div>
   </div><br>
-  <p>Retiramos tus botellas vacías, las devolvemos al supermercado y te traemos las bebidas que elijas — tú no te mueves.</p>
+  <p>Retiramos tus botellas retornables, las canjeamos en el supermercado y te entregamos bebidas frescas en tu puerta. <strong>Operamos solo en Vitacura</strong> con rutas fijas <strong>martes y viernes</strong> para agrupar pedidos. <strong>Mínimo: 12 botellas</strong>.</p>
   <a href="javascript:void(0)" class="hero-cta" onclick="startOrder()">♻️ &nbsp;Solicitar retiro ahora →</a>
 </section>
 
@@ -314,6 +314,25 @@
       <div class="card-num">1</div>
       <div><div class="card-title">Elige el supermercado</div><div class="card-sub">Selecciona la cadena donde canjearemos tus botellas</div></div>
     </div>
+    
+    <div style="margin-bottom:1rem">
+      <label>🗓️ Elige tu cupo de ruta (Vitacura)</label>
+      <div class="hint">Operamos <strong>martes</strong> y <strong>viernes</strong>. Elige un día para agrupar pedidos y optimizar el recorrido.</div>
+      <div class="super-grid" id="route-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+        <div class="super-card" id="route-tue" onclick="selectRoute('martes')" style="text-align:left">
+          <div class="super-name" style="font-size:.9rem">🟢 Martes</div>
+          <div class="hint" style="margin:0;margin-top:.2rem">Cupo: <strong><span id="slots-tue">—</span></strong> pedidos</div>
+          <div class="super-check">✓ Seleccionado</div>
+        </div>
+        <div class="super-card" id="route-fri" onclick="selectRoute('viernes')" style="text-align:left">
+          <div class="super-name" style="font-size:.9rem">🔵 Viernes</div>
+          <div class="hint" style="margin:0;margin-top:.2rem">Cupo: <strong><span id="slots-fri">—</span></strong> pedidos</div>
+          <div class="super-check">✓ Seleccionado</div>
+        </div>
+      </div>
+      <div class="bottles-info" id="route-note" style="display:block;margin-top:.8rem">Selecciona un día para continuar.</div>
+    </div>
+
     <div class="super-grid" id="super-grid"></div>
     <div class="btn-row"><button class="btn btn-primary" onclick="goStep(2)">Continuar →</button></div>
   </div>
@@ -322,7 +341,7 @@
   <div class="card" id="card-2">
     <div class="card-header">
       <div class="card-num">2</div>
-      <div><div class="card-title">¿Cuántas botellas retornas?</div><div class="card-sub">Solo botellas retornables con símbolo ♻️</div></div>
+      <div><div class="card-title">¿Cuántas botellas retornas?</div><div class="card-sub">Vitacura: mínimo <strong>12</strong> botellas retornables con símbolo ♻️</div></div>
     </div>
     <div class="counter-row">
       <button class="counter-btn" onclick="changeBottles(-1)">−</button>
@@ -330,17 +349,18 @@
       <button class="counter-btn" onclick="changeBottles(1)">+</button>
       <div class="counter-label">botellas</div>
     </div>
+    <div class="hint" style="margin-top:.8rem">💡 Para mantener el servicio rentable en Vitacura, el mínimo es <strong>12 botellas</strong>. Mientras más juntes, más ahorro neto.</div>
     <div class="pricing-explainer" id="pricing-box" style="display:none">
       <div class="pricing-header">💰 Tu ahorro y tarifa en tiempo real</div>
       <div class="pricing-body">
-        <div class="pricing-row"><span class="pricing-key">Ahorro por botella retornable vs desechable</span><span class="pricing-val green">~$320 CLP/botella</span></div>
+        <div class="pricing-row"><span class="pricing-key">Ahorro por botella retornable vs desechable</span><span class="pricing-val green">~$320 CLP/botella (estimado)</span></div>
         <div class="pricing-row"><span class="pricing-key">Ahorro total (<span id="pr-n">0</span> botellas)</span><span class="pricing-val green" id="pr-saving">—</span></div>
         <div class="pricing-row"><span class="pricing-key">Tarifa Retórname <span id="pr-fee-detail" style="font-weight:400;font-size:.74rem"></span></span><span class="pricing-val blue" id="pr-fee">—</span></div>
         <div class="pricing-row" style="border-top:2px solid var(--border);margin-top:.3rem;padding-top:.6rem"><span class="pricing-key"><strong>Ahorro neto sin salir de casa</strong></span><span class="pricing-val green" id="pr-net" style="font-size:1.05rem">—</span></div>
         <div class="progress-wrap">
           <div class="progress-label"><span id="prog-left" style="color:var(--g1)"></span><span id="prog-right" style="color:var(--muted);font-size:.72rem"></span></div>
           <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-          <div class="progress-milestones"><span>1 bot.</span><span>🎯 Tope gratis: 10 bot.</span></div>
+          <div class="progress-milestones"><span>🎯 Mínimo: 12 bot.</span><span>⭐ Mejor tarifa neta: 24+ bot.</span></div>
         </div>
       </div>
     </div>
@@ -444,7 +464,7 @@
     <!-- Flujo explicado -->
     <div class="payment-title">⚙️ ¿Cómo funciona el cobro?</div>
     <div class="flow-steps">
-      <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-text"><strong>Ahora:</strong> se cobra la tarifa del servicio ($990–$1.990 según número de botellas). Este monto es fijo y cubre el retiro, canje y entrega.</div></div>
+      <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-text"><strong>Ahora:</strong> se cobra la tarifa del servicio ($2.490–$3.490 según número de botellas). Este monto es fijo y cubre el retiro, canje y entrega.</div></div>
       <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-text"><strong>En el supermercado:</strong> canjeamos tus botellas, obtenemos crédito y compramos las bebidas que pediste con ese crédito.</div></div>
       <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-text"><strong>Al entregar:</strong> te mostramos la boleta real. Si el costo de las bebidas fue <strong>menor</strong> al crédito obtenido, te transferimos la diferencia. Si fue <strong>mayor</strong>, solo cobraremos el diferencial.</div></div>
     </div>
@@ -543,11 +563,16 @@ function startOrder(){
   // Asegura que el flujo esté en el paso 1 y hace scroll al inicio del pedido.
   if (typeof goStep === 'function') goStep(1);
   const el = document.getElementById('card-1');
-  if (el) {
-    el.scrollIntoView({behavior:'smooth', block:'start'});
-    // Compensa el sticky nav + barra de pasos
-    setTimeout(()=>window.scrollBy(0, -140), 250);
-  }
+  if (!el) return;
+
+  // Scroll con compensación de elementos sticky (nav + barra de pasos)
+  const nav = document.querySelector('nav');
+  const steps = document.querySelector('.steps-bar');
+  const offset = (nav?.offsetHeight || 0) + (steps?.offsetHeight || 0) + 12;
+
+  const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
 }
 
 /* ── FAVICON ── */
@@ -556,8 +581,14 @@ document.getElementById('favicon-link').href = 'data:image/png;base64,' + FAVICO
 document.getElementById('nav-logo').src       = 'data:image/png;base64,' + FAVICON_B64;
 
 /* ── PRICING ── */
-const BASE_FEE=990, FEE_PER=100, FEE_CAP=10, MAX_FEE=1990, SAVE_PER=320;
-function calcFee(n){ return n<=0?0:BASE_FEE+Math.min(n,FEE_CAP)*FEE_PER; }
+const const MIN_BOTTLES=12;
+const SAVE_PER=320;
+function calcFee(n){
+  if(n<MIN_BOTTLES) return 0;
+  if(n<=15) return 2490;
+  if(n<=23) return 2990;
+  return 3490;
+}
 
 /* ── DATA ── */
 const SUPERMARKETS=[
@@ -615,11 +646,35 @@ const BRANCHES={
 
 /* ── STATE ── */
 let state={
+  routeDay:null,    // 'martes' | 'viernes'
   supermarket:null, bottles:0,
   bevQty:{},        // {id: number}
   fallbacks:[],     // [{id,name,icon,pick}]
   pickupAddr:'', deliveryAddr:'', branch:null
 };
+
+const ROUTE_CAPACITY = { martes: 16, viernes: 16 }; // demo: cupos por ruta
+const ROUTE_CUTOFF_HOURS = { martes: '11:00–15:00', viernes: '11:00–15:00' };
+
+function renderRouteSlots(){
+  const tue=document.getElementById('slots-tue');
+  const fri=document.getElementById('slots-fri');
+  if(tue) tue.textContent = ROUTE_CAPACITY.martes + ' disponibles';
+  if(fri) fri.textContent = ROUTE_CAPACITY.viernes + ' disponibles';
+}
+
+function selectRoute(day){
+  state.routeDay = day;
+  const t=document.getElementById('route-tue');
+  const f=document.getElementById('route-fri');
+  if(t) t.classList.toggle('selected', day==='martes');
+  if(f) f.classList.toggle('selected', day==='viernes');
+  const note=document.getElementById('route-note');
+  if(note){
+    note.innerHTML = '✅ Ruta seleccionada: <strong>'+day+'</strong> <span style="color:var(--muted);font-weight:600">('+ROUTE_CUTOFF_HOURS[day]+')</span>';
+  }
+}
+
 let currentStep=1;
 
 /* ── INIT ── */
@@ -627,6 +682,7 @@ let currentStep=1;
   buildSuperGrid();
   buildBevLists();
   buildFallbackList();
+  renderRouteSlots();
 })();
 
 function buildSuperGrid(){
@@ -684,8 +740,11 @@ function goStep(n){
 }
 
 function validateStep(n){
-  if(n===1&&!state.supermarket){showToast('Selecciona un supermercado.');return false;}
-  if(n===2&&state.bottles<1){showToast('Agrega al menos 1 botella.');return false;}
+  if(n===1){
+    if(!state.routeDay){showToast('Selecciona tu día de ruta (martes o viernes).');return false;}
+    if(!state.supermarket){showToast('Selecciona un supermercado.');return false;}
+  }
+  if(n===2&&state.bottles<MIN_BOTTLES){showToast('En Vitacura el mínimo es '+MIN_BOTTLES+' botellas. Te faltan '+(MIN_BOTTLES-state.bottles)+'.');return false;}
   if(n===3){
     const total=getTotalBevAssigned();
     if(total<1){showToast('Elige al menos 1 bebida.');return false;}
@@ -713,28 +772,71 @@ function changeBottles(delta){
   state.bottles=Math.max(0,state.bottles+delta);
   const n=state.bottles;
   document.getElementById('bottle-count').textContent=n;
+
   const box=document.getElementById('pricing-box');
   const info=document.getElementById('bottles-info');
-  if(n<1){box.style.display='none';info.style.display='none'; updateBevTracker(); return;}
-  const fee=calcFee(n), saving=n*SAVE_PER, net=saving-fee;
-  const capped=n>=FEE_CAP;
+
+  if(n<1){
+    box.style.display='none';
+    info.style.display='none';
+    updateBevTracker();
+    return;
+  }
+
   box.style.display='block';
+
+  const saving=n*SAVE_PER;
+  const fee=calcFee(n);
+  const net = (n>=MIN_BOTTLES) ? (saving-fee) : null;
+
+  // fee tier label
+  let tier='(mín. '+MIN_BOTTLES+' bot.)';
+  if(n>=MIN_BOTTLES && n<=15) tier='(12–15 bot.)';
+  else if(n>=16 && n<=23) tier='(16–23 bot.)';
+  else if(n>=24) tier='(24+ bot.)';
+
   document.getElementById('pr-n').textContent=n;
   document.getElementById('pr-saving').textContent='$'+saving.toLocaleString('es-CL')+' CLP';
-  document.getElementById('pr-fee').textContent='$'+fee.toLocaleString('es-CL')+' CLP';
-  document.getElementById('pr-fee-detail').textContent=capped?'(tope alcanzado 🎉)':'($990 base + '+n+'×$100)';
-  document.getElementById('pr-net').textContent='$'+net.toLocaleString('es-CL')+' CLP';
-  const pct=Math.min(100,(n/FEE_CAP)*100);
-  document.getElementById('progress-fill').style.width=pct+'%';
-  const left=capped?'🎉 ¡Tope alcanzado! La tarifa no sube más.':n+' / '+FEE_CAP+' botellas';
-  const right=capped?'':('Agrega '+(FEE_CAP-n)+' más para el tope');
+  document.getElementById('pr-fee-detail').textContent=tier;
+
+  if(n<MIN_BOTTLES){
+    document.getElementById('pr-fee').textContent='—';
+    document.getElementById('pr-net').textContent='—';
+  }else{
+    document.getElementById('pr-fee').textContent='$'+fee.toLocaleString('es-CL')+' CLP';
+    document.getElementById('pr-net').textContent='$'+net.toLocaleString('es-CL')+' CLP';
+  }
+
+  // Progress: 0–12 => 0–50%, 12–24 => 50–100%
+  let pct=0;
+  if(n<=MIN_BOTTLES) pct=(n/MIN_BOTTLES)*50;
+  else if(n<=24) pct=50+((n-MIN_BOTTLES)/(24-MIN_BOTTLES))*50;
+  else pct=100;
+  document.getElementById('progress-fill').style.width=Math.min(100,Math.max(0,pct))+'%';
+
+  const left = (n<MIN_BOTTLES)
+    ? ('Te faltan '+(MIN_BOTTLES-n)+' para el mínimo')
+    : ('Listo ✅ · '+tier.replace(/[()]/g,''));
+  const right = (n<MIN_BOTTLES)
+    ? ('Mínimo para agendar ruta')
+    : ((n<24) ? ('Agrega '+(24-n)+' más para mejor neto') : '⭐ Óptimo alcanzado');
   document.getElementById('prog-left').textContent=left;
   document.getElementById('prog-right').textContent=right;
+
   info.style.display='block';
-  info.innerHTML=capped
-    ?'🎉 <strong>¡Tope alcanzado!</strong> La tarifa se queda en <strong>$'+MAX_FEE.toLocaleString('es-CL')+'</strong> sin importar cuántas botellas agregues.'
-    :'🌱 Con <strong>'+n+' botella'+(n!==1?'s':'')+'</strong> pagas <strong>$'+fee.toLocaleString('es-CL')+'</strong> y ahorras neto <strong>$'+net.toLocaleString('es-CL')+' CLP</strong>';
+  if(n<MIN_BOTTLES){
+    info.innerHTML = '⚠️ Aún no alcanzas el mínimo de <strong>'+MIN_BOTTLES+' botellas</strong> para operar en Vitacura. Te faltan <strong>'+(MIN_BOTTLES-n)+'</strong>.';
+  }else{
+    info.innerHTML = '🌱 Con <strong>'+n+' botellas</strong> estimas un ahorro de <strong>$'+saving.toLocaleString('es-CL')+'</strong> y pagas una tarifa de <strong>$'+fee.toLocaleString('es-CL')+'</strong> → ahorro neto estimado: <strong>$'+net.toLocaleString('es-CL')+'</strong>.';
+  }
+
+  // actualiza etiqueta del botón de pago
+  const feeLabel = (n>=MIN_BOTTLES) ? ('$'+calcFee(n).toLocaleString('es-CL')) : '—';
+  const cfl=document.getElementById('confirm-fee-label');
+  if(cfl) cfl.textContent=feeLabel;
+
   updateBevTracker();
+}
 }
 
 /* ── PASO 3: BEBIDAS ── */
@@ -890,6 +992,7 @@ function buildSummary(){
   const br=state.branch?`${state.branch.name}<br><small style="font-weight:600;color:var(--muted)">${state.branch.addr}</small>`:'Por determinar';
   document.getElementById('summary-content').innerHTML=`
     <div class="summary-row"><span class="summary-key">Supermercado</span><span class="summary-val">${sm?.icon} ${sm?.name}</span></div>
+<div class="summary-row"><span class="summary-key">Ruta (Vitacura)</span><span class="summary-val">🗓️ ${state.routeDay || "—"}</span></div>
     <div class="summary-row"><span class="summary-key">Botellas a retornar</span><span class="summary-val">${n} botella${n!==1?'s':''}</span></div>
     <div class="summary-row"><span class="summary-key">Bebidas solicitadas</span><span class="summary-val" style="line-height:1.8">${bevLines}</span></div>
     <div class="summary-row"><span class="summary-key">Alternativas si no hay stock</span><span class="summary-val" style="line-height:1.8">${fbLines}</span></div>
@@ -914,13 +1017,14 @@ function buildReceipt(){
   const sm=SUPERMARKETS.find(s=>s.id===state.supermarket);
   const code='RT-'+Math.floor(100000+Math.random()*900000);
   document.getElementById('receipt-code').textContent=code;
-  document.getElementById('confirm-fee-label').textContent='$'+fee.toLocaleString('es-CL')+' CLP';
+  document.getElementById('confirm-fee-label').textContent = (n>=MIN_BOTTLES) ? ('$'+fee.toLocaleString('es-CL')+' CLP') : '—';
 
   const bevLines=getBevSummaryLines().map(l=>`
     <div class="receipt-row"><span class="r-key">${l}</span><span class="r-val">Estimado</span></div>`).join('');
 
   document.getElementById('receipt-body').innerHTML=`
     <div class="receipt-row"><span class="r-key">Supermercado</span><span class="r-val">${sm?.icon} ${sm?.name}</span></div>
+    <div class="receipt-row"><span class="r-key">Ruta (Vitacura)</span><span class="r-val">🗓️ ${state.routeDay || "—"}</span></div>
     <div class="receipt-row"><span class="r-key">Botellas a retornar</span><span class="r-val">${n}</span></div>
     <div class="receipt-row" style="background:#f0fdf5;border-radius:4px">
       <span class="r-key">💰 Ahorro estimado en botellas</span>
@@ -958,13 +1062,13 @@ function confirmOrder(){
 
 /* ── RESET ── */
 function newOrder(){
-  state={supermarket:null,bottles:0,bevQty:{},fallbacks:[],pickupAddr:'',deliveryAddr:'',branch:null};
+  state={routeDay:null,supermarket:null,bottles:0,bevQty:{},fallbacks:[],pickupAddr:'',deliveryAddr:'',branch:null};
   currentStep=1;
   document.querySelectorAll('.card').forEach(c=>c.classList.remove('visible'));
   document.getElementById('card-1').classList.add('visible');
   for(let i=1;i<=6;i++) document.getElementById('step-ind-'+i).classList.remove('active','completed');
   document.getElementById('step-ind-1').classList.add('active');
-  buildSuperGrid(); buildBevLists(); buildFallbackList();
+  buildSuperGrid(); buildBevLists(); buildFallbackList(); renderRouteSlots();
   document.getElementById('bottle-count').textContent='0';
   document.getElementById('bottles-info').style.display='none';
   document.getElementById('pricing-box').style.display='none';
